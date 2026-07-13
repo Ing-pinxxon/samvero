@@ -1,0 +1,67 @@
+generator client {
+  provider      = "prisma-client-js"
+  // "native" para tu equipo; el target de Vercel para el despliegue serverless.
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String
+  slug      String    @unique
+  tagline   String?   @db.Text
+  iconKey   String    @default("box")
+  imageUrl  String?   @db.Text
+  sortOrder Int       @default(0)
+  createdAt DateTime  @default(now())
+  products  Product[]
+
+  @@index([slug])
+}
+
+model Product {
+  id                Int            @id @default(autoincrement())
+  name              String
+  slug              String         @unique
+  description       String         @db.Text
+  priceCop          Int
+  compareAtPriceCop Int?
+  stock             Int            @default(0)
+  featured          Boolean        @default(false)
+  active            Boolean        @default(true)
+  categoryId        Int
+  category          Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  images            ProductImage[]
+  specs             ProductSpec[]
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  @@index([slug])
+  @@index([categoryId])
+}
+
+model ProductSpec {
+  id        Int     @id @default(autoincrement())
+  label     String
+  value     String  @db.Text
+  sortOrder Int     @default(0)
+  productId Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model ProductImage {
+  id        Int     @id @default(autoincrement())
+  url       String  @db.Text
+  alt       String?
+  sortOrder Int     @default(0)
+  productId Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
