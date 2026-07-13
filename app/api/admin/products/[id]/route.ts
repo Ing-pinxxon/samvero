@@ -54,6 +54,10 @@ export async function PUT(
     );
   }
 
+  if (!Number.isFinite(Number(priceCop)) || Number(priceCop) < 0) {
+    return NextResponse.json({ error: "Precio inválido" }, { status: 400 });
+  }
+
   const slug = await uniqueSlug(body.slug || name, id);
 
   // Reemplaza las imágenes por las nuevas.

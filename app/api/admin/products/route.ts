@@ -50,6 +50,10 @@ export async function POST(request: Request) {
     );
   }
 
+  if (!Number.isFinite(Number(priceCop)) || Number(priceCop) < 0) {
+    return NextResponse.json({ error: "Precio inválido" }, { status: 400 });
+  }
+
   const slug = await uniqueSlug(body.slug || name);
 
   const product = await prisma.product.create({
