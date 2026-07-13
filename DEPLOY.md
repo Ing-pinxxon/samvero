@@ -1,7 +1,8 @@
 # Despliegue de SAMVERO en Vercel
 
-Guía para publicar la tienda en **Vercel** (serverless) con **MySQL gestionado**
-e imágenes en **Vercel Blob**.
+Guía para publicar la tienda en **Vercel** (serverless) con **Postgres nativo
+de Vercel** (Neon) e imágenes en **Vercel Blob**. Todo desde el mismo panel,
+sin crear cuentas en otros proveedores.
 
 > ¿Por qué así? En Vercel el sistema de archivos es **efímero**: lo que se sube al
 > disco se borra. Por eso la base de datos y las imágenes deben vivir fuera del
@@ -9,23 +10,7 @@ e imágenes en **Vercel Blob**.
 
 ---
 
-## 1. Base de datos MySQL gestionada
-
-Elige un proveedor con plan gratuito y crea una base MySQL:
-
-- **[Railway](https://railway.app)** — simple, plan gratis. Crea un servicio "MySQL".
-- **[Aiven](https://aiven.io)** — plan gratis de MySQL.
-- **[TiDB Cloud](https://tidbcloud.com)** o **PlanetScale** — compatibles con MySQL.
-
-Copia la **cadena de conexión** que te den. Debe quedar así:
-
-```
-mysql://usuario:clave@host:puerto/samvero?connection_limit=5
-```
-
-El `?connection_limit=5` evita agotar conexiones en serverless.
-
-## 2. Sube el código a GitHub
+## 1. Sube el código a GitHub
 
 ```bash
 git init
@@ -36,33 +21,39 @@ git remote add origin https://github.com/TU_USUARIO/samvero.git
 git push -u origin main
 ```
 
-## 3. Importa el proyecto en Vercel
+## 2. Importa el proyecto en Vercel
 
-1. Entra a [vercel.com](https://vercel.com) → **Add New → Project** → importa el repo.
-2. Framework: **Next.js** (se detecta solo).
-3. Antes de desplegar, agrega las **Environment Variables** (paso 4).
+1. Entra a [vercel.com](https://vercel.com) → **Add New → Project** → importa el repo `samvero`.
+2. Framework: **Next.js** (se detecta solo). Todavía no despliegues: primero crea la base de datos (paso 3).
 
-## 4. Variables de entorno en Vercel
+## 3. Crea la base de datos Postgres (Neon, integrado en Vercel)
 
-En **Settings → Environment Variables** añade:
+1. En el proyecto de Vercel: pestaña **Storage → Create Database → Postgres** (Neon).
+2. Ponle un nombre (ej. `samvero-db`) y **Connect** al proyecto.
+3. Vercel agrega automáticamente la variable **`DATABASE_URL`** (y otras
+   `POSTGRES_*`) a tu proyecto. No necesitas copiarla a mano.
 
-| Variable | Valor |
-| --- | --- |
-| `DATABASE_URL` | La cadena de conexión del paso 1 |
-| `ADMIN_EMAIL` | `admin@samvero.co` (o el que quieras) |
-| `ADMIN_PASSWORD_HASH` | Hash bcrypt (ver paso 6) |
-| `AUTH_SECRET` | Cadena larga y aleatoria (32+ caracteres) |
-| `NEXT_PUBLIC_WHATSAPP_NUMBER` | Tu número, ej. `573001234567` |
-| `NEXT_PUBLIC_SITE_URL` | `https://samvero.co` (tu dominio real) |
+## 4. Activa Vercel Blob (imágenes)
 
-## 5. Activa Vercel Blob (imágenes)
-
-1. En el proyecto: **Storage → Create Database → Blob**.
+1. **Storage → Create Database → Blob**.
 2. Al conectarlo, Vercel agrega **`BLOB_READ_WRITE_TOKEN`** automáticamente.
-3. Con eso, las imágenes que subas desde el panel se guardan en la nube.
 
 > Alternativa sin Blob: en el panel puedes pegar la **URL** de una imagen ya
 > alojada en otro lado en vez de subir el archivo.
+
+## 5. Resto de variables de entorno
+
+En **Settings → Environment Variables** añade las que faltan:
+
+| Variable | Valor |
+| --- | --- |
+| `ADMIN_EMAIL` | `admin@samvero.co` (o el que quieras) |
+| `ADMIN_PASSWORD_HASH` | Hash bcrypt (ver paso 6) |
+| `AUTH_SECRET` | Cadena larga y aleatoria (32+ caracteres) |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | Tu número, ej. `573214496014` |
+| `NEXT_PUBLIC_SITE_URL` | `https://samvero.co` (tu dominio real) |
+
+(`DATABASE_URL` y `BLOB_READ_WRITE_TOKEN` ya quedaron listas en los pasos 3 y 4.)
 
 ## 6. Contraseña de admin para producción
 
@@ -76,21 +67,20 @@ Copia el resultado en `ADMIN_PASSWORD_HASH` (tiene prioridad sobre `ADMIN_PASSWO
 
 ## 7. Crea las tablas y datos en la base de producción
 
-Desde tu equipo, apuntando a la base de producción (una sola vez):
+Copia el valor de `DATABASE_URL` desde Vercel (**Storage → tu base → .env.local tab**)
+y córrelo desde tu equipo una sola vez:
 
 ```bash
 # Windows PowerShell
-$env:DATABASE_URL="mysql://usuario:clave@host:puerto/samvero"
+$env:DATABASE_URL="postgresql://usuario:clave@host/samvero?sslmode=require"
 npx prisma db push        # crea las tablas
 npm run db:seed           # opcional: categorías + productos demo
 ```
 
-(O corre estos comandos desde el proveedor si ofrece consola.)
-
 ## 8. Despliega y verifica
 
-1. Vercel construye con `prisma generate && next build` (ya configurado).
-   El `binaryTargets` de Prisma incluye el motor de Vercel (`rhel-openssl-3.0.x`).
+1. En Vercel, dale a **Deploy**. El build corre `prisma generate && next build`
+   (ya configurado). El `binaryTargets` de Prisma incluye el motor de Vercel.
 2. Abre tu dominio: la tienda debe cargar con productos.
 3. Entra a `/admin` con tus credenciales y prueba crear/editar un producto.
 
@@ -108,5 +98,8 @@ npm run db:seed           # opcional: categorías + productos demo
 | Necesidad | Servicio | Plan |
 | --- | --- | --- |
 | Hosting | Vercel | Gratis (Hobby) |
-| Base de datos | Railway / Aiven / TiDB | Gratis para empezar |
+| Base de datos | Vercel Postgres (Neon) | Gratis para empezar |
 | Imágenes | Vercel Blob | Gratis (con límites) |
+
+Todo se gestiona **desde el mismo panel de Vercel** — no hace falta crear
+cuenta en ningún otro proveedor.

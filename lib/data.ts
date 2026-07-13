@@ -58,8 +58,8 @@ export async function getProducts({
   }
   if (search) {
     where.OR = [
-      { name: { contains: search } },
-      { description: { contains: search } },
+      { name: { contains: search, mode: "insensitive" } },
+      { description: { contains: search, mode: "insensitive" } },
     ];
   }
   if (onlyOffers) {

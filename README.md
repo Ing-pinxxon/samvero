@@ -9,32 +9,14 @@ gestionar productos y categorías.
 
 - **Next.js 14** (App Router) + **TypeScript**
 - **Tailwind CSS** (tema de marca: navy `#0D1B2A` + naranja `#FF6A00`, fuente Poppins)
-- **Prisma ORM + MySQL**
+- **Prisma ORM + PostgreSQL** (Vercel Postgres / Neon)
 - **Zustand** (carrito con persistencia en el navegador)
 - **jose** (sesión de admin en cookie httpOnly) + `bcryptjs`
 
 ## Requisitos
 
 - Node.js 18+ (probado con Node 24)
-- **MySQL** corriendo en local (o Docker)
-
-## Estado actual (ya configurado)
-
-En este equipo ya quedó montada una instancia **portable de MySQL 8.0** en
-`C:\Users\Daniel\mysql-portable`, con la base `samvero` creada y poblada
-(5 categorías + 18 productos demo). El `.env` ya apunta a ella
-(`mysql://root:@127.0.0.1:3306/samvero`, root sin contraseña, solo para local).
-
-MySQL portable NO es un servicio de Windows: si reinicias el PC, vuelve a
-levantarlo con:
-
-```bash
-powershell -ExecutionPolicy Bypass -File scripts\start-mysql.ps1
-```
-
-Deja esa ventana abierta y en otra terminal corre `npm run dev`. Si quieres
-que MySQL arranque solo con Windows, se puede instalar como servicio
-(`mysqld --install`, requiere permisos de administrador).
+- Una base de datos **PostgreSQL** (se crea gratis en 2 clics desde Vercel, ver [DEPLOY.md](DEPLOY.md))
 
 ## Puesta en marcha
 
@@ -44,23 +26,22 @@ que MySQL arranque solo con Windows, se puede instalar como servicio
    npm install
    ```
 
-2. Crea la base de datos en MySQL (una vez):
-
-   ```sql
-   CREATE DATABASE samvero CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-   ```
+2. Consigue una base de datos Postgres. La forma más simple: créala desde
+   **Vercel → Storage → Postgres** (ver [DEPLOY.md](DEPLOY.md) paso 3) y usa la
+   misma cadena de conexión tanto en local como en producción — Neon es
+   accesible por internet, así que no necesitas instalar nada en tu equipo.
 
 3. Copia `.env.example` a `.env` y ajusta los valores:
 
-   - `DATABASE_URL` → usuario, contraseña y puerto de tu MySQL.
-   - `NEXT_PUBLIC_WHATSAPP_NUMBER` → número de la tienda (formato internacional, ej. `573001234567`).
+   - `DATABASE_URL` → la cadena de conexión de tu base Postgres.
+   - `NEXT_PUBLIC_WHATSAPP_NUMBER` → número de la tienda (formato internacional, ej. `573214496014`).
    - `ADMIN_EMAIL` / `ADMIN_PASSWORD` → credenciales del panel.
    - `AUTH_SECRET` → cadena larga y aleatoria.
 
 4. Crea las tablas y carga datos de ejemplo:
 
    ```bash
-   npm run db:migrate      # crea el esquema
+   npx prisma db push      # crea el esquema
    npm run db:seed         # 5 categorías + productos demo
    ```
 
@@ -115,6 +96,11 @@ Ya viene optimizado para buscadores:
 ## Imágenes
 
 - Los productos de ejemplo usan imágenes de Unsplash.
-- Las imágenes subidas desde el panel se guardan en `public/uploads/`.
-- Para despliegues serverless (p. ej. Vercel), migra la subida a un servicio
-  como Cloudinary o S3, ya que el sistema de archivos es efímero.
+- En desarrollo local, las imágenes subidas desde el panel se guardan en `public/uploads/`.
+- En producción (Vercel), se suben automáticamente a **Vercel Blob** en vez de
+  disco (el sistema de archivos de Vercel es efímero) — ver [DEPLOY.md](DEPLOY.md).
+
+## Despliegue
+
+Guía completa paso a paso para publicar la tienda en Vercel (base de datos,
+imágenes, variables de entorno, dominio): ver [DEPLOY.md](DEPLOY.md).
