@@ -5,7 +5,10 @@ import path from "path";
 export const runtime = "nodejs";
 
 const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"];
-const MAX_BYTES = 5 * 1024 * 1024; // 5 MB
+// Vercel limita el cuerpo de las funciones serverless a ~4.5 MB. Dejamos el
+// tope en 4 MB para tener margen (el multipart añade algo de peso) y que la
+// subida no falle de forma opaca con un 413 del propio Vercel.
+const MAX_BYTES = 4 * 1024 * 1024; // 4 MB
 
 export async function POST(request: Request) {
   const formData = await request.formData().catch(() => null);
@@ -24,7 +27,7 @@ export async function POST(request: Request) {
 
   if (file.size > MAX_BYTES) {
     return NextResponse.json(
-      { error: "La imagen supera el límite de 5 MB." },
+      { error: "La imagen supera el límite de 4 MB." },
       { status: 400 }
     );
   }
