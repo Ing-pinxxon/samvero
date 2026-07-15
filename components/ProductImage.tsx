@@ -17,7 +17,13 @@ type Props = {
 
 const FALLBACK = "/placeholder.svg";
 
-/** Wrapper de next/image con fallback automático si la imagen falla al cargar. */
+/**
+ * Wrapper de next/image con recuperación en dos pasos:
+ * 1. Si el optimizador falla (p. ej. la URL es de un host que no está en la
+ *    lista de `images.remotePatterns`), reintenta cargando la imagen directa
+ *    sin optimizar — así las URLs pegadas a mano en el admin sí se ven.
+ * 2. Si también falla directa (URL rota), muestra el placeholder.
+ */
 export default function ProductImage({
   src,
   alt,
@@ -28,11 +34,13 @@ export default function ProductImage({
   className,
   priority,
 }: Props) {
-  const [error, setError] = useState(false);
-  const finalSrc = !src || error ? FALLBACK : src;
+  // 0 = optimizada, 1 = directa sin optimizar, 2 = placeholder.
+  const [attempt, setAttempt] = useState(0);
+  const finalSrc = !src || attempt >= 2 ? FALLBACK : src;
 
   return (
     <Image
+      key={attempt}
       src={finalSrc}
       alt={alt}
       fill={fill}
@@ -40,7 +48,8 @@ export default function ProductImage({
       height={fill ? undefined : (height ?? 600)}
       sizes={sizes}
       priority={priority}
-      onError={() => setError(true)}
+      unoptimized={attempt === 1}
+      onError={() => setAttempt((a) => a + 1)}
       className={clsx(className)}
     />
   );
