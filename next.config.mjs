@@ -6,8 +6,10 @@ const nextConfig = {
       { protocol: "https", hostname: "picsum.photos" },
       { protocol: "https", hostname: "placehold.co" },
       { protocol: "https", hostname: "loremflickr.com" },
-      // Imágenes subidas desde el admin a Vercel Blob.
-      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
+      // Imágenes subidas desde el admin a Vercel Blob. El host varía según la
+      // tienda ("<id>.public.blob..." o "<id>.blob..."), así que se cubren
+      // todos los subdominios con "**".
+      { protocol: "https", hostname: "**.blob.vercel-storage.com" },
     ],
   },
   async headers() {
