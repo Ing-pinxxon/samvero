@@ -86,12 +86,18 @@ Ya viene optimizado para buscadores:
 - **`manifest.webmanifest`** + favicon (`icon.svg`) y `theme-color` de marca.
 - Panel `/admin` marcado como `noindex`.
 
-> **Importante para producción:** define `NEXT_PUBLIC_SITE_URL=https://samvero.co`
-> en el `.env` del servidor. De ahí salen los `canonical`, el sitemap y las URLs
-> de OpenGraph. En local usa `http://localhost:3000`.
+> **Importante para producción:** define `NEXT_PUBLIC_SITE_URL` en Vercel con la
+> **URL real** del sitio. Si ya tienes dominio propio usa `https://tudominio.com`;
+> si todavía no, usa la URL que te da Vercel (ej. `https://samvero.vercel.app`).
+> De ahí salen los `canonical`, el sitemap y las URLs de OpenGraph. Si no la
+> defines, el código usa automáticamente la URL de producción de Vercel
+> (`VERCEL_PROJECT_PRODUCTION_URL`); en local usa `http://localhost:3000`.
 >
-> Tras desplegar, registra el dominio en [Google Search Console](https://search.google.com/search-console)
-> y envía `https://samvero.co/sitemap.xml`.
+> ⚠️ No dejes apuntando el SEO a un dominio que aún no exista: si el dominio no
+> resuelve, Google no puede indexar el sitio.
+>
+> Tras desplegar, registra el sitio en [Google Search Console](https://search.google.com/search-console)
+> y envía `<tu-url>/sitemap.xml`.
 
 ## Imágenes
 
