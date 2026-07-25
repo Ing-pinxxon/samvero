@@ -76,6 +76,27 @@ export async function getProducts({
   return prisma.product.findMany({ where, include: productInclude, orderBy });
 }
 
+/**
+ * Búsqueda rápida para el desplegable del buscador: pocos campos y un límite
+ * pequeño. Devuelve solo la imagen principal de cada producto.
+ */
+export async function searchProducts(query: string, limit = 6) {
+  const q = query.trim();
+  if (q.length < 2) return [];
+  return prisma.product.findMany({
+    where: {
+      active: true,
+      OR: [
+        { name: { contains: q, mode: "insensitive" } },
+        { description: { contains: q, mode: "insensitive" } },
+      ],
+    },
+    include: { images: { orderBy: { sortOrder: "asc" }, take: 1 } },
+    orderBy: { createdAt: "desc" },
+    take: limit,
+  });
+}
+
 export async function getProductBySlug(slug: string) {
   return prisma.product.findUnique({
     where: { slug },

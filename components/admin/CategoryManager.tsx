@@ -1,10 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Loader2, Pencil, Trash2, Plus, X } from "lucide-react";
+import { useRef, useState } from "react";
+import { Loader2, Pencil, Trash2, Plus, X, Upload } from "lucide-react";
 import ProductImage from "@/components/ProductImage";
 import { getCategoryIcon, ICON_OPTIONS } from "@/lib/categories";
+import { uploadImage } from "@/lib/upload-image";
 
 type Category = {
   id: number;
@@ -42,7 +43,9 @@ export default function CategoryManager({
   const router = useRouter();
   const [form, setForm] = useState<FormState>(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const isEdit = Boolean(form.id);
   const inputClass =
@@ -61,6 +64,21 @@ export default function CategoryManager({
   const reset = () => {
     setForm(emptyForm);
     setError(null);
+  };
+
+  const onUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files?.[0];
+    if (!selected) return;
+    setUploading(true);
+    setError(null);
+    const result = await uploadImage(selected);
+    if ("error" in result) {
+      setError(result.error);
+    } else {
+      setForm((f) => ({ ...f, imageUrl: result.url }));
+    }
+    setUploading(false);
+    if (fileRef.current) fileRef.current.value = "";
   };
 
   const save = async (e: React.FormEvent) => {
@@ -223,13 +241,57 @@ export default function CategoryManager({
         </div>
         <div>
           <label className="mb-1.5 block text-sm font-medium text-navy">
-            URL de imagen
+            Imagen
           </label>
+
+          {form.imageUrl && (
+            <div className="group relative mb-2 aspect-video w-full overflow-hidden rounded-xl border border-navy/10 bg-light">
+              <ProductImage
+                src={form.imageUrl}
+                alt="Imagen de la categoría"
+                fill
+                sizes="360px"
+                className="object-cover"
+              />
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, imageUrl: "" })}
+                aria-label="Quitar imagen"
+                className="absolute right-1.5 top-1.5 inline-flex h-7 w-7 items-center justify-center rounded-full bg-navy/70 text-white opacity-0 transition-opacity group-hover:opacity-100"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={uploading}
+            className="btn-outline w-full"
+          >
+            {uploading ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin" /> Subiendo...
+              </>
+            ) : (
+              <>
+                <Upload className="h-5 w-5" /> Subir imagen
+              </>
+            )}
+          </button>
           <input
-            className={inputClass}
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            onChange={onUpload}
+            className="hidden"
+          />
+          <input
+            className={`${inputClass} mt-2`}
             value={form.imageUrl}
             onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-            placeholder="https://..."
+            placeholder="O pega una URL: https://..."
           />
         </div>
         <div>

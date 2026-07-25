@@ -13,6 +13,7 @@ import {
   ListChecks,
 } from "lucide-react";
 import ProductImage from "@/components/ProductImage";
+import { uploadImage } from "@/lib/upload-image";
 
 type Category = { id: number; name: string };
 
@@ -31,51 +32,6 @@ export type ProductFormData = {
   images: string[];
   specs: ProductSpecInput[];
 };
-
-// Tope de subida alineado con el límite de cuerpo de las funciones de Vercel
-// (~4.5 MB). Con la compresión de abajo casi nunca se alcanza.
-const MAX_UPLOAD_BYTES = 4 * 1024 * 1024; // 4 MB
-// Lado máximo de la imagen tras redimensionar. Suficiente para una ficha de
-// producto y mantiene el archivo liviano.
-const MAX_DIMENSION = 1600;
-// Solo re-codificamos formatos estáticos; gif (animado) y avif se suben tal cual.
-const COMPRESSIBLE = ["image/jpeg", "image/png", "image/webp"];
-
-/**
- * Redimensiona y comprime la imagen en el navegador antes de subirla. Las fotos
- * de celular suelen pesar varios MB y en producción (Vercel) el servidor rechaza
- * cuerpos grandes; al reducirlas aquí, la subida siempre cabe. Ante cualquier
- * fallo, devuelve el archivo original para no bloquear la subida.
- */
-async function compressImage(file: File): Promise<File> {
-  if (!COMPRESSIBLE.includes(file.type)) return file;
-  try {
-    // "from-image" respeta la orientación EXIF para que la foto no salga girada.
-    const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
-    const scale = Math.min(1, MAX_DIMENSION / Math.max(bitmap.width, bitmap.height));
-    const width = Math.round(bitmap.width * scale);
-    const height = Math.round(bitmap.height * scale);
-
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return file;
-    ctx.drawImage(bitmap, 0, 0, width, height);
-    bitmap.close?.();
-
-    const blob = await new Promise<Blob | null>((resolve) =>
-      canvas.toBlob(resolve, "image/webp", 0.85)
-    );
-    // Si no se pudo codificar o quedó más pesado que el original, usa el original.
-    if (!blob || blob.size >= file.size) return file;
-
-    const name = file.name.replace(/\.[^.]+$/, "") + ".webp";
-    return new File([blob], name, { type: "image/webp" });
-  } catch {
-    return file;
-  }
-}
 
 const empty: ProductFormData = {
   name: "",
@@ -142,37 +98,14 @@ export default function ProductForm({
     if (!selected) return;
     setUploading(true);
     setError(null);
-    try {
-      const file = await compressImage(selected);
-      // Aviso claro en el cliente antes de enviar (evita un 413 opaco del servidor).
-      if (file.size > MAX_UPLOAD_BYTES) {
-        setError(
-          "La imagen es muy pesada. Usa una de menos de 4 MB o reduce su resolución."
-        );
-        return;
-      }
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-      if (!res.ok) {
-        // La respuesta de error puede no ser JSON (p. ej. un 413 de Vercel).
-        const data = await res.json().catch(() => null);
-        setError(
-          data?.error ??
-            (res.status === 413
-              ? "La imagen es demasiado pesada para el servidor. Prueba con una más liviana."
-              : "No se pudo subir la imagen.")
-        );
-        return;
-      }
-      const data = await res.json();
-      update("images", [...form.images, data.url]);
-    } catch {
-      setError("Error al subir la imagen.");
-    } finally {
-      setUploading(false);
-      if (fileRef.current) fileRef.current.value = "";
+    const result = await uploadImage(selected);
+    if ("error" in result) {
+      setError(result.error);
+    } else {
+      update("images", [...form.images, result.url]);
     }
+    setUploading(false);
+    if (fileRef.current) fileRef.current.value = "";
   };
 
   const onSubmit = async (e: React.FormEvent) => {
