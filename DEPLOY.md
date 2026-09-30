@@ -51,7 +51,7 @@ En **Settings → Environment Variables** añade las que faltan:
 | `ADMIN_PASSWORD_HASH` | Hash bcrypt (ver paso 6) |
 | `AUTH_SECRET` | Cadena larga y aleatoria (32+ caracteres) |
 | `NEXT_PUBLIC_WHATSAPP_NUMBER` | Tu número, ej. `573214496014` |
-| `NEXT_PUBLIC_SITE_URL` | `https://samvero.co` (tu dominio real) |
+| `NEXT_PUBLIC_SITE_URL` | La URL **real** del sitio: tu dominio (`https://tudominio.com`) o, si aún no tienes, la de Vercel (`https://samvero.vercel.app`). No pongas un dominio que todavía no exista. |
 
 (`DATABASE_URL` y `BLOB_READ_WRITE_TOKEN` ya quedaron listas en los pasos 3 y 4.)
 

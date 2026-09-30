@@ -1,4 +1,25 @@
-const rawUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://samvero.co";
+/**
+ * URL base del sitio, en orden de prioridad:
+ * 1. NEXT_PUBLIC_SITE_URL — la que defines tú (dominio propio en producción).
+ * 2. VERCEL_PROJECT_PRODUCTION_URL — la URL de producción que Vercel provee
+ *    automáticamente (ej. "samvero.vercel.app"), útil mientras no haya dominio.
+ * 3. localhost para desarrollo.
+ *
+ * Antes había un dominio fijo ("samvero.co") como respaldo: si ese dominio no
+ * existía, Google recibía canonicals y un sitemap apuntando a un sitio muerto y
+ * no indexaba. siteConfig solo se usa en componentes de servidor (layout,
+ * sitemap, robots, metadata y JSON-LD), por eso es seguro leer variables que
+ * solo existen en el servidor como VERCEL_PROJECT_PRODUCTION_URL.
+ */
+function resolveSiteUrl(): string {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (explicit) return explicit;
+  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
+  if (vercel) return `https://${vercel}`;
+  return "http://localhost:3000";
+}
+
+const rawUrl = resolveSiteUrl();
 
 export const siteConfig = {
   name: "SAMVERO",
@@ -24,6 +45,36 @@ export function absoluteUrl(path = ""): string {
   if (!path) return siteConfig.url;
   if (/^https?:\/\//i.test(path)) return path;
   return `${siteConfig.url}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
+/** Corta un texto en el límite de palabra más cercano sin pasar de `max`. */
+export function truncateAtWord(text: string, max = 160): string {
+  const clean = text.trim().replace(/\s+/g, " ");
+  if (clean.length <= max) return clean;
+  const slice = clean.slice(0, max - 1);
+  const lastSpace = slice.lastIndexOf(" ");
+  const cut = lastSpace > 40 ? slice.slice(0, lastSpace) : slice;
+  return `${cut.trimEnd()}…`;
+}
+
+/**
+ * Descripción para buscadores de un producto. Usa la descripción escrita si
+ * tiene contenido suficiente; si no, arma un respaldo con el nombre, la
+ * categoría y el gancho de envíos, para que ningún producto quede sin meta
+ * description (Google penaliza las páginas sin descripción).
+ */
+export function productSeoDescription(p: {
+  name: string;
+  description?: string | null;
+  categoryName?: string | null;
+}): string {
+  const base = (p.description ?? "").trim();
+  if (base.length >= 50) return truncateAtWord(base, 160);
+  const cat = p.categoryName ? ` de ${p.categoryName}` : "";
+  return truncateAtWord(
+    `${p.name}${cat} disponible en ${siteConfig.name}. Compra online con envíos a todo Colombia y pago seguro.`,
+    160
+  );
 }
 
 /** Datos estructurados de la organización/tienda. */
@@ -80,6 +131,7 @@ export function productJsonLd(p: ProductLd) {
     name: p.name,
     description: p.description,
     image: p.images.map((i) => absoluteUrl(i)),
+    sku: p.slug,
     category: p.categoryName,
     brand: { "@type": "Brand", name: siteConfig.name },
     offers: {
@@ -87,6 +139,7 @@ export function productJsonLd(p: ProductLd) {
       url: absoluteUrl(`/producto/${p.slug}`),
       priceCurrency: siteConfig.currency,
       price: p.priceCop,
+      itemCondition: "https://schema.org/NewCondition",
       availability:
         p.stock > 0
           ? "https://schema.org/InStock"

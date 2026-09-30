@@ -12,7 +12,11 @@ import {
   primaryImage,
 } from "@/lib/data";
 import JsonLd from "@/components/seo/JsonLd";
-import { productJsonLd, breadcrumbJsonLd } from "@/lib/seo";
+import {
+  productJsonLd,
+  breadcrumbJsonLd,
+  productSeoDescription,
+} from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -22,17 +26,31 @@ export async function generateMetadata({
   params: { slug: string };
 }): Promise<Metadata> {
   const product = await getProductBySlug(params.slug).catch(() => null);
-  if (!product) return { title: "Producto" };
+  // Producto inexistente: no debe indexarse ni consumir presupuesto de rastreo.
+  if (!product) return { title: "Producto no encontrado", robots: { index: false } };
+
   const image = primaryImage(product);
+  const description = productSeoDescription({
+    name: product.name,
+    description: product.description,
+    categoryName: product.category.name,
+  });
+
   return {
     title: product.name,
-    description: product.description.slice(0, 160),
+    description,
     alternates: { canonical: `/producto/${product.slug}` },
     openGraph: {
       type: "website",
       title: product.name,
-      description: product.description.slice(0, 160),
+      description,
       url: `/producto/${product.slug}`,
+      images: image ? [image] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.name,
+      description,
       images: image ? [image] : [],
     },
   };
@@ -59,7 +77,11 @@ export default async function ProductoPage({
           productJsonLd({
             name: product.name,
             slug: product.slug,
-            description: product.description,
+            description: productSeoDescription({
+              name: product.name,
+              description: product.description,
+              categoryName: product.category.name,
+            }),
             priceCop: product.priceCop,
             stock: product.stock,
             images: product.images.map((i) => i.url),

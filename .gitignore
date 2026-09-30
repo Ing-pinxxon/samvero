@@ -37,3 +37,6 @@ next-env.d.ts
 # imágenes de referencia sueltas en la raíz (manual de marca, capturas, etc.)
 /*.png
 /*.jpg
+
+# reporte generado por la auditoría SEO
+/seo-audit-report.md

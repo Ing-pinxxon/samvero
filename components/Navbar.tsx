@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Search, ShoppingCart, Menu, X } from "lucide-react";
+import { ShoppingCart, Menu, X } from "lucide-react";
 import { clsx } from "clsx";
 import SamveroLogo from "./SamveroLogo";
+import SearchBox from "./SearchBox";
 import { useCart, selectCount } from "@/lib/cart-store";
 
 type NavCategory = { name: string; slug: string };
@@ -19,21 +20,13 @@ const links = [
 
 export default function Navbar({ categories }: { categories: NavCategory[] }) {
   const pathname = usePathname();
-  const router = useRouter();
   const openCart = useCart((s) => s.openCart);
   const count = useCart(selectCount);
   const [mounted, setMounted] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [query, setQuery] = useState("");
 
   useEffect(() => setMounted(true), []);
   useEffect(() => setMobileOpen(false), [pathname]);
-
-  const onSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const q = query.trim();
-    router.push(q ? `/tienda?search=${encodeURIComponent(q)}` : "/tienda");
-  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-navy/5 bg-white/95 backdrop-blur">
@@ -44,16 +37,7 @@ export default function Navbar({ categories }: { categories: NavCategory[] }) {
           </Link>
 
           {/* Buscador (desktop) */}
-          <form onSubmit={onSearch} className="relative ml-2 hidden flex-1 md:block">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slatebrand" />
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              type="search"
-              placeholder="Busca productos, categorías..."
-              className="w-full rounded-xl border border-navy/10 bg-light py-2.5 pl-10 pr-4 text-sm text-navy outline-none transition focus:border-brand focus:bg-white"
-            />
-          </form>
+          <SearchBox className="ml-2 hidden flex-1 md:block" />
 
           {/* Links (desktop) */}
           <nav className="hidden items-center gap-1 lg:flex">
@@ -117,16 +101,10 @@ export default function Navbar({ categories }: { categories: NavCategory[] }) {
       {mobileOpen && (
         <div className="border-t border-navy/5 bg-white lg:hidden">
           <div className="container-page space-y-4 py-4">
-            <form onSubmit={onSearch} className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slatebrand" />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                type="search"
-                placeholder="Buscar productos..."
-                className="w-full rounded-xl border border-navy/10 bg-light py-2.5 pl-10 pr-4 text-sm outline-none focus:border-brand focus:bg-white"
-              />
-            </form>
+            <SearchBox
+              placeholder="Buscar productos..."
+              onNavigate={() => setMobileOpen(false)}
+            />
             <div className="flex flex-col">
               {links.map((l) => (
                 <Link
