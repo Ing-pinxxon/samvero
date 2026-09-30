@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Instagram, Facebook, Youtube, MapPin, Mail } from "lucide-react";
 import SamveroLogo from "./SamveroLogo";
+import SelloPinzon from "./SelloPinzon";
 
 type FooterCategory = { name: string; slug: string };
 
@@ -103,7 +104,7 @@ export default function Footer({ categories }: { categories: FooterCategory[] })
       <div className="border-t border-white/10">
         <div className="container-page flex flex-col items-center justify-between gap-2 py-5 text-xs text-white/60 sm:flex-row">
           <p>© {new Date().getFullYear()} SAMVERO. Todos los derechos reservados.</p>
-          <p>samvero.co</p>
+          <SelloPinzon site="samvero" className="[--sello-color:#fff] [--sello-color-hover:#FF6A00]" />
         </div>
       </div>
     </footer>

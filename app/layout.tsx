@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
+import "./sello.css";
 import JsonLd from "@/components/seo/JsonLd";
 import { siteConfig, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 
