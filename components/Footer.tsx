@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Instagram, Facebook, Youtube, MapPin, Mail } from "lucide-react";
 import SamveroLogo from "./SamveroLogo";
 import SelloPinzon from "./SelloPinzon";
+import { Bat, Cobweb } from "./promo/HalloweenDecor";
 
 type FooterCategory = { name: string; slug: string };
 
@@ -20,10 +21,23 @@ const socials = [
   { icon: Youtube, href: "https://youtube.com/@samveroco", label: "YouTube" },
 ];
 
-export default function Footer({ categories }: { categories: FooterCategory[] }) {
+export default function Footer({
+  categories,
+  halloween = false,
+}: {
+  categories: FooterCategory[];
+  halloween?: boolean;
+}) {
   return (
-    <footer className="mt-20 bg-navy text-white">
-      <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+    <footer className="relative mt-20 overflow-hidden bg-navy text-white">
+      {halloween && (
+        <>
+          <Cobweb className="right-0 top-0 h-32 w-32 -scale-x-100 text-white/15" />
+          <Bat className="right-24 top-10 w-10 text-witch/70" />
+          <Bat className="right-44 top-20 w-6 text-witch/50" delay={0.7} />
+        </>
+      )}
+      <div className="container-page relative grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <SamveroLogo variant="light" />
           <p className="mt-4 max-w-xs text-sm text-white/70">

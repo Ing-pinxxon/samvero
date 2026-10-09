@@ -28,6 +28,9 @@ const config: Config = {
           700: "#C24F00",
         },
         light: "#F2F2F2",
+        // Temporada de Halloween (estilo "Noche de Calabazas")
+        witch: { DEFAULT: "#7B4FD6", 600: "#6A3FC4" },
+        moon: "#F5E6C8",
         slatebrand: "#64748B",
       },
       fontFamily: {
@@ -50,10 +53,15 @@ const config: Config = {
           "0%": { transform: "translateX(100%)" },
           "100%": { transform: "translateX(0)" },
         },
+        bat: {
+          "0%, 100%": { transform: "translateY(0) scaleY(1)" },
+          "50%": { transform: "translateY(-6px) scaleY(0.75)" },
+        },
       },
       animation: {
         "fade-in": "fade-in 0.5s ease-out both",
         "slide-in": "slide-in 0.25s ease-out both",
+        bat: "bat 2.4s ease-in-out infinite",
       },
     },
   },

@@ -12,6 +12,9 @@ import {
   primaryImage,
 } from "@/lib/data";
 import JsonLd from "@/components/seo/JsonLd";
+import StickyBuyBar from "@/components/promo/StickyBuyBar";
+import { getSeason } from "@/lib/season";
+import { discountPercent } from "@/lib/format";
 import {
   productJsonLd,
   breadcrumbJsonLd,
@@ -63,6 +66,17 @@ export default async function ProductoPage({
 }) {
   const product = await getProductBySlug(params.slug).catch(() => null);
   if (!product) notFound();
+
+  const season = getSeason();
+  const onSale = discountPercent(product.priceCop, product.compareAtPriceCop) !== null;
+  const cartProduct = {
+    id: product.id,
+    name: product.name,
+    slug: product.slug,
+    priceCop: product.priceCop,
+    image: primaryImage(product),
+    maxStock: product.stock,
+  };
 
   const related = await getRelatedProducts(
     product.categoryId,
@@ -135,6 +149,11 @@ export default async function ProductoPage({
               compareAtPriceCop={product.compareAtPriceCop}
               size="lg"
             />
+            {season.halloween && season.promoEndsAt && onSale && (
+              <p className="mt-2 text-sm font-bold text-red-600">
+                🎃 Precio de Halloween hasta el 31 de octubre
+              </p>
+            )}
           </div>
 
           <p className="mt-6 whitespace-pre-line leading-relaxed text-slatebrand">
@@ -142,16 +161,7 @@ export default async function ProductoPage({
           </p>
 
           <div className="mt-8">
-            <ProductBuyBox
-              product={{
-                id: product.id,
-                name: product.name,
-                slug: product.slug,
-                priceCop: product.priceCop,
-                image: primaryImage(product),
-                maxStock: product.stock,
-              }}
-            />
+            <ProductBuyBox product={cartProduct} />
           </div>
 
           {/* Garantías */}
@@ -200,6 +210,7 @@ export default async function ProductoPage({
           <ProductGrid products={related} />
         </section>
       )}
+      <StickyBuyBar product={cartProduct} compareAtPriceCop={product.compareAtPriceCop} />
     </div>
   );
 }

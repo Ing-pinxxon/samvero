@@ -5,8 +5,12 @@ import TrustBadges from "@/components/TrustBadges";
 import CategoryCard from "@/components/CategoryCard";
 import ProductGrid from "@/components/ProductGrid";
 import SloganStrip from "@/components/SloganStrip";
+import HalloweenHero from "@/components/promo/HalloweenHero";
+import FlashDeals from "@/components/promo/FlashDeals";
+import CategoryDeals from "@/components/promo/CategoryDeals";
 import type { Metadata } from "next";
-import { getCategories, getFeaturedProducts } from "@/lib/data";
+import { getCategories, getDiscountedProducts, getFeaturedProducts } from "@/lib/data";
+import { getSeason } from "@/lib/season";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -15,15 +19,21 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [categories, featured] = await Promise.all([
+  const season = getSeason();
+  const [categories, featured, deals] = await Promise.all([
     getCategories().catch(() => []),
     getFeaturedProducts(8).catch(() => []),
+    getDiscountedProducts().catch(() => []),
   ]);
 
   return (
     <>
-      <Hero />
+      {season.halloween ? <HalloweenHero promoEndsAt={season.promoEndsAt} /> : <Hero />}
       <TrustBadges />
+
+      {/* Avisos de ofertas (estilo Temu): solo aparecen si hay descuentos reales */}
+      <FlashDeals deals={deals.slice(0, 12)} promoEndsAt={season.promoEndsAt} />
+      <CategoryDeals deals={deals} halloween={season.halloween} />
 
       {/* Categorías */}
       <section className="container-page py-16">
@@ -69,7 +79,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <SloganStrip />
+      <SloganStrip halloween={season.halloween} />
 
       {/* CTA */}
       <section className="container-page py-16">

@@ -7,12 +7,20 @@ const slogans = [
   "Lo que necesitas, cuando lo necesitas.",
 ];
 
-export default function SloganStrip() {
+const halloweenSlogans = [
+  "🎃 Precios de miedo en tecnología y hogar.",
+  "🦇 Ofertas de Halloween hasta el 31 de octubre.",
+  "Todo lo que necesitas, en un solo lugar.",
+  "👻 ¿Dulce o truco? Mejor una oferta.",
+];
+
+export default function SloganStrip({ halloween = false }: { halloween?: boolean }) {
+  const items = halloween ? halloweenSlogans : slogans;
   return (
-    <section className="bg-navy py-4 text-white">
+    <section className={halloween ? "bg-gradient-to-r from-navy to-witch py-4 text-white" : "bg-navy py-4 text-white"}>
       <div className="flex gap-10 overflow-hidden">
         <div className="flex shrink-0 animate-[marquee_28s_linear_infinite] gap-10">
-          {[...slogans, ...slogans].map((s, i) => (
+          {[...items, ...items].map((s, i) => (
             <span
               key={i}
               className="flex shrink-0 items-center gap-2 text-sm font-medium text-white/90"

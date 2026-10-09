@@ -52,6 +52,7 @@ En **Settings → Environment Variables** añade las que faltan:
 | `AUTH_SECRET` | Cadena larga y aleatoria (32+ caracteres) |
 | `NEXT_PUBLIC_WHATSAPP_NUMBER` | Tu número, ej. `573214496014` |
 | `NEXT_PUBLIC_SITE_URL` | La URL **real** del sitio: tu dominio (`https://tudominio.com`) o, si aún no tienes, la de Vercel (`https://samvero.vercel.app`). No pongas un dominio que todavía no exista. |
+| `SEASON` *(opcional)* | Temporadas de la tienda. Sin definir, Halloween se enciende solo del 1 al 31 de octubre (hora de Colombia). `halloween` la fuerza encendida, `off` la apaga. |
 
 (`DATABASE_URL` y `BLOB_READ_WRITE_TOKEN` ya quedaron listas en los pasos 3 y 4.)
 
