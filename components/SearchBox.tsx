@@ -138,7 +138,7 @@ export default function SearchBox({
       </form>
 
       {showDropdown && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-navy/10 bg-white shadow-lg">
+        <div className="hw-light absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-navy/10 bg-white shadow-lg">
           {results.length > 0 ? (
             <ul
               id="search-suggestions"

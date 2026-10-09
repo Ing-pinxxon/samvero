@@ -6,6 +6,7 @@ import CategoryCard from "@/components/CategoryCard";
 import ProductGrid from "@/components/ProductGrid";
 import SloganStrip from "@/components/SloganStrip";
 import HalloweenHero from "@/components/promo/HalloweenHero";
+import { Moon, Witch } from "@/components/promo/HalloweenDecor";
 import FlashDeals from "@/components/promo/FlashDeals";
 import CategoryDeals from "@/components/promo/CategoryDeals";
 import type { Metadata } from "next";
@@ -28,7 +29,16 @@ export default async function HomePage() {
 
   return (
     <>
-      {season.halloween ? <HalloweenHero promoEndsAt={season.promoEndsAt} /> : <Hero />}
+      {season.halloween ? (
+        <HalloweenHero
+          promoEndsAt={season.promoEndsAt}
+          spotlight={
+            deals[0] ?? (featured[0] ? { product: featured[0], discount: null } : null)
+          }
+        />
+      ) : (
+        <Hero />
+      )}
       <TrustBadges />
 
       {/* Avisos de ofertas (estilo Temu): solo aparecen si hay descuentos reales */}
@@ -83,7 +93,13 @@ export default async function HomePage() {
 
       {/* CTA */}
       <section className="container-page py-16">
-        <div className="relative overflow-hidden rounded-3xl bg-navy px-8 py-14 text-center text-white">
+        <div className="hw-cta relative overflow-hidden rounded-3xl bg-navy px-8 py-14 text-center text-white">
+          {season.halloween && (
+            <>
+              <Moon className="left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 opacity-30" />
+              <Witch className="hw-witch-fly absolute left-0 top-6 w-28" />
+            </>
+          )}
           <div
             className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-brand/20 blur-3xl"
             aria-hidden

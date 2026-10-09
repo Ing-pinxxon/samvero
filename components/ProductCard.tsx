@@ -15,7 +15,7 @@ export default function ProductCard({ product }: { product: ProductWithRelations
     discount && product.compareAtPriceCop ? product.compareAtPriceCop - product.priceCop : null;
 
   return (
-    <div className="product-card group relative flex flex-col overflow-hidden rounded-2xl border border-navy/5 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-cardHover">
+    <div className="product-card hw-light group relative flex flex-col overflow-hidden rounded-2xl border border-navy/5 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-cardHover">
       <Link
         href={`/producto/${product.slug}`}
         className="relative block aspect-square overflow-hidden bg-light"

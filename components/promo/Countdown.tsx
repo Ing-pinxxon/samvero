@@ -42,7 +42,7 @@ export default function Countdown({
   className,
 }: {
   endsAt: string;
-  variant?: "light" | "dark";
+  variant?: "light" | "dark" | "glow";
   className?: string;
 }) {
   const parts = useCountdown(endsAt);
@@ -70,11 +70,17 @@ export default function Countdown({
           key={label}
           aria-hidden="true"
           className={clsx(
-            "inline-flex min-w-[2.6rem] flex-col items-center rounded-lg px-1.5 py-1 leading-none",
-            variant === "light" ? "bg-white text-navy" : "bg-navy text-white"
+            "inline-flex flex-col items-center rounded-lg leading-none",
+            variant === "glow"
+              ? "hw-digit min-w-[3.6rem] border border-brand/50 bg-brand/10 px-2 py-2 text-brand"
+              : "min-w-[2.6rem] px-1.5 py-1",
+            variant === "light" && "bg-white text-navy",
+            variant === "dark" && "bg-navy text-white"
           )}
         >
-          <span className="text-base font-extrabold">{value === undefined ? "--" : two(value)}</span>
+          <span className={clsx("font-extrabold", variant === "glow" ? "text-2xl" : "text-base")}>
+            {value === undefined ? "--" : two(value)}
+          </span>
           <span className="mt-0.5 text-[9px] font-semibold uppercase opacity-60">{label}</span>
         </span>
       ))}

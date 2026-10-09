@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { ProductWithRelations } from "@/lib/data";
+import { Ghost } from "./HalloweenDecor";
 
 type Deal = { product: ProductWithRelations; discount: number };
 
@@ -24,7 +25,7 @@ export default function CategoryDeals({ deals, halloween }: { deals: Deal[]; hal
   if (banners.length === 0) return null;
 
   return (
-    <section className="container-page pt-8">
+    <section className="category-deals container-page pt-8">
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {banners.map((b, i) => (
           <li key={b.slug}>
@@ -37,6 +38,12 @@ export default function CategoryDeals({ deals, halloween }: { deals: Deal[]; hal
                   : "bg-gradient-to-br from-navy to-witch-600")
               }
             >
+              {halloween && (
+                <Ghost
+                  className="hw-float absolute -right-2 -top-1 w-14 opacity-90"
+                  style={{ animationDelay: `${i * 0.8}s` }}
+                />
+              )}
               <span className="text-xs font-semibold uppercase tracking-wide text-white/80">
                 {halloween ? "🦇 Halloween" : "Ofertas"}
               </span>

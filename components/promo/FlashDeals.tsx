@@ -27,7 +27,7 @@ export default function FlashDeals({
 
   return (
     <section className="container-page pt-12">
-      <div className="rounded-3xl bg-gradient-to-br from-brand-50 to-white p-5 ring-1 ring-brand/15 sm:p-7">
+      <div className="flash-deals relative rounded-3xl bg-gradient-to-br from-brand-50 to-white p-5 ring-1 ring-brand/15 sm:p-7">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-3">
             <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-white">
@@ -58,7 +58,7 @@ export default function FlashDeals({
               <li key={product.id} className="w-44 shrink-0 snap-start sm:w-52">
                 <Link
                   href={`/producto/${product.slug}`}
-                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-navy/5 bg-white shadow-card transition-shadow hover:shadow-cardHover"
+                  className="hw-light group flex h-full flex-col overflow-hidden rounded-2xl border border-navy/5 bg-white shadow-card transition-shadow hover:shadow-cardHover"
                 >
                   <div className="relative aspect-square overflow-hidden bg-light">
                     <ProductImage

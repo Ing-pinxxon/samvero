@@ -24,7 +24,7 @@ export default function PromoBar({ halloween }: { halloween: boolean }) {
   return (
     <div
       className={clsx(
-        "text-xs font-semibold text-white",
+        "promo-bar text-xs font-semibold text-white",
         halloween ? "bg-gradient-to-r from-brand via-brand-600 to-witch" : "bg-navy"
       )}
     >

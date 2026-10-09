@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins } from "next/font/google";
+import { Creepster, Poppins } from "next/font/google";
 import "./globals.css";
 import "./sello.css";
+import "./halloween.css";
 import JsonLd from "@/components/seo/JsonLd";
 import { siteConfig, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 
@@ -10,6 +11,16 @@ const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
   variable: "--font-poppins",
   display: "swap",
+});
+
+// Tipografía de títulos en temporada de Halloween. Sin precarga: el navegador
+// solo la descarga cuando una página de temporada la usa.
+const creepster = Creepster({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-spooky",
+  display: "swap",
+  preload: false,
 });
 
 export const viewport: Viewport = {
@@ -81,7 +92,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className={poppins.variable}>
+    <html lang="es" className={`${poppins.variable} ${creepster.variable}`}>
       <body className="font-sans">
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
         {children}

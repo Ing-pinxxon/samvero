@@ -17,7 +17,7 @@ const halloweenSlogans = [
 export default function SloganStrip({ halloween = false }: { halloween?: boolean }) {
   const items = halloween ? halloweenSlogans : slogans;
   return (
-    <section className={halloween ? "bg-gradient-to-r from-navy to-witch py-4 text-white" : "bg-navy py-4 text-white"}>
+    <section className={halloween ? "slogan-strip bg-gradient-to-r from-navy to-witch py-4 text-white" : "bg-navy py-4 text-white"}>
       <div className="flex gap-10 overflow-hidden">
         <div className="flex shrink-0 animate-[marquee_28s_linear_infinite] gap-10">
           {[...items, ...items].map((s, i) => (

@@ -10,7 +10,7 @@ export default function CountdownRibbon({ endsAt }: { endsAt: string }) {
   if (parts === null) return null;
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-navy via-[#1f2f55] to-witch text-white">
+    <div className="countdown-ribbon relative overflow-hidden bg-gradient-to-r from-navy via-[#1f2f55] to-witch text-white">
       <div className="container-page flex flex-wrap items-center justify-center gap-x-4 gap-y-2 py-2.5 sm:justify-between">
         <p className="text-sm font-bold">🎃 Las ofertas de Halloween terminan en</p>
         <div className="flex items-center gap-4">

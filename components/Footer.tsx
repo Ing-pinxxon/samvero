@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Instagram, Facebook, Youtube, MapPin, Mail } from "lucide-react";
 import SamveroLogo from "./SamveroLogo";
 import SelloPinzon from "./SelloPinzon";
-import { Bat, Cobweb } from "./promo/HalloweenDecor";
+import { Bat, Cobweb, HauntedSkyline } from "./promo/HalloweenDecor";
 
 type FooterCategory = { name: string; slug: string };
 
@@ -29,9 +29,11 @@ export default function Footer({
   halloween?: boolean;
 }) {
   return (
-    <footer className="relative mt-20 overflow-hidden bg-navy text-white">
+    <footer className={`relative bg-navy text-white ${halloween ? "mt-32 sm:mt-40" : "mt-20"}`}>
       {halloween && (
         <>
+          {/* Cementerio asomando sobre el pie de página */}
+          <HauntedSkyline fill="#0D1B2A" className="absolute inset-x-0 bottom-full h-24 -scale-x-100 sm:h-32" />
           <Cobweb className="right-0 top-0 h-32 w-32 -scale-x-100 text-white/15" />
           <Bat className="right-24 top-10 w-10 text-witch/70" />
           <Bat className="right-44 top-20 w-6 text-witch/50" delay={0.7} />

@@ -141,7 +141,7 @@ export default async function ProductoPage({
           >
             {product.category.name}
           </Link>
-          <h1 className="mt-2 text-3xl font-bold text-navy">{product.name}</h1>
+          <h1 className="product-title mt-2 text-3xl font-bold text-navy">{product.name}</h1>
 
           <div className="mt-4">
             <PriceTag
@@ -150,7 +150,7 @@ export default async function ProductoPage({
               size="lg"
             />
             {season.halloween && season.promoEndsAt && onSale && (
-              <p className="mt-2 text-sm font-bold text-red-600">
+              <p className="hw-flicker mt-2 text-sm font-bold text-red-600">
                 🎃 Precio de Halloween hasta el 31 de octubre
               </p>
             )}

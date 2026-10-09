@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import PromoBar from "@/components/promo/PromoBar";
 import CountdownRibbon from "@/components/promo/CountdownRibbon";
+import HalloweenAtmosphere from "@/components/promo/HalloweenAtmosphere";
 import { getCategories } from "@/lib/data";
 import { getSeason } from "@/lib/season";
 
@@ -27,11 +28,13 @@ export default async function StoreLayout({
   const season = getSeason();
 
   return (
-    // data-season permite ajustar estilos de temporada desde CSS (globals.css).
+    // data-season activa el estilo de temporada (app/halloween.css). "isolate"
+    // crea el contexto donde la atmósfera queda detrás de todo el contenido.
     <div
-      className="flex min-h-screen flex-col"
+      className="relative isolate flex min-h-screen flex-col"
       data-season={season.halloween ? "halloween" : undefined}
     >
+      {season.halloween && <HalloweenAtmosphere />}
       <PromoBar halloween={season.halloween} />
       <Navbar categories={categories} />
       {season.promoEndsAt && <CountdownRibbon endsAt={season.promoEndsAt} />}
