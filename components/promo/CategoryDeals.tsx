@@ -2,6 +2,14 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { ProductWithRelations } from "@/lib/data";
 import { Ghost } from "./HalloweenDecor";
+import { Bow } from "./NavidadDecor";
+
+const GRADIENTS = {
+  halloween: ["bg-gradient-to-br from-witch to-brand", "bg-gradient-to-br from-navy to-witch-600"],
+  navidad: ["bg-gradient-to-br from-[#D62839] to-[#8E0F1F]", "bg-gradient-to-br from-[#1E8E4E] to-[#0B3D22]"],
+  none: ["bg-gradient-to-br from-witch to-brand", "bg-gradient-to-br from-navy to-witch-600"],
+};
+const LABEL = { halloween: "🦇 Halloween", navidad: "🎄 Navidad", none: "Ofertas" };
 
 type Deal = { product: ProductWithRelations; discount: number };
 
@@ -9,7 +17,14 @@ type Deal = { product: ProductWithRelations; discount: number };
  * Carteles "Hasta -X% en {categoría}". El porcentaje es el mayor descuento
  * real de los productos de esa categoría, así que nunca promete de más.
  */
-export default function CategoryDeals({ deals, halloween }: { deals: Deal[]; halloween: boolean }) {
+export default function CategoryDeals({
+  deals,
+  theme = null,
+}: {
+  deals: Deal[];
+  theme?: "halloween" | "navidad" | null;
+}) {
+  const t = theme ?? "none";
   const best = new Map<string, { name: string; slug: string; discount: number; count: number }>();
   for (const { product, discount } of deals) {
     const c = product.category;
@@ -33,19 +48,23 @@ export default function CategoryDeals({ deals, halloween }: { deals: Deal[]; hal
               href={`/categoria/${b.slug}`}
               className={
                 "group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl p-5 text-white shadow-card transition-transform hover:-translate-y-0.5 " +
-                (i % 2 === 0
-                  ? "bg-gradient-to-br from-witch to-brand"
-                  : "bg-gradient-to-br from-navy to-witch-600")
+                GRADIENTS[t][i % 2]
               }
             >
-              {halloween && (
+              {theme === "navidad" && (
+                <Bow
+                  className="hw-float absolute -right-1 -top-1 w-16 rotate-12"
+                  style={{ animationDelay: `${i * 0.8}s` }}
+                />
+              )}
+              {theme === "halloween" && (
                 <Ghost
                   className="hw-float absolute -right-2 -top-1 w-14 opacity-90"
                   style={{ animationDelay: `${i * 0.8}s` }}
                 />
               )}
               <span className="text-xs font-semibold uppercase tracking-wide text-white/80">
-                {halloween ? "🦇 Halloween" : "Ofertas"}
+                {LABEL[t]}
               </span>
               <span className="mt-2 text-2xl font-extrabold leading-tight">
                 Hasta -{b.discount}%

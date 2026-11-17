@@ -1,0 +1,79 @@
+/* ==========================================================================
+   Modo noche compartido por las temporadas (Halloween, Navidad).
+
+   Todo cuelga de [data-season], que el layout de la tienda solo pone en
+   temporada. Las reglas sobre utilidades de Tailwind van dentro de :where()
+   para quedar con la especificidad de UNA clase y ganar solo por orden (este
+   archivo carga después de globals.css); hover:/focus: siguen funcionando.
+   Las "islas claras" (.hw-light: tarjetas de producto, carrito, desplegable
+   del buscador) conservan su estilo normal para que las fotos luzcan.
+   ========================================================================== */
+
+[data-season] {
+  --hw-bg: #070b16;
+  --hw-ink: #f4eeff;
+  --hw-soft: #bdb6d9;
+  --hw-glass: rgba(255, 255, 255, 0.045);
+  --hw-glass-2: rgba(255, 255, 255, 0.09);
+  --hw-line: rgba(255, 255, 255, 0.1);
+
+  background: var(--hw-bg);
+  color: var(--hw-ink);
+  color-scheme: dark;
+}
+html:has([data-season="halloween"]) body {
+  background: #070b16;
+}
+html:has([data-season="navidad"]) body {
+  background: #071226;
+}
+[data-season] .hw-light {
+  color-scheme: light;
+}
+
+/* ---------- Superficies y textos (fuera de las islas claras) ---------- */
+
+:where([data-season]) :is(.bg-white, .bg-light):where(:not(.hw-light, .hw-light *)) {
+  background-color: var(--hw-glass);
+}
+:where([data-season]) [class~="bg-white/95"]:where(:not(.hw-light, .hw-light *)) {
+  background-color: rgba(10, 12, 28, 0.92);
+}
+:where([data-season]) :is(.text-navy, [class~="text-navy/70"], [class~="text-navy/90"]):where(:not(.hw-light, .hw-light *)) {
+  color: var(--hw-ink);
+}
+:where([data-season]) .text-slatebrand:where(:not(.hw-light, .hw-light *)) {
+  color: var(--hw-soft);
+}
+:where([data-season]) :is([class~="border-navy/5"], [class~="border-navy/10"], [class~="border-navy/15"]):where(:not(.hw-light, .hw-light *)) {
+  border-color: var(--hw-line);
+}
+:where([data-season]) [class~="divide-navy/5"]:where(:not(.hw-light *)) > * {
+  border-color: var(--hw-line);
+}
+:where([data-season]) [class~="hover:bg-light"]:hover:where(:not(.hw-light, .hw-light *)) {
+  background-color: var(--hw-glass-2);
+}
+:where([data-season]) [class~="focus:bg-white"]:focus:where(:not(.hw-light, .hw-light *)) {
+  background-color: var(--hw-glass-2);
+}
+:where([data-season]) :is(.btn-outline, .chip):where(:not(.hw-light, .hw-light *, .hw-hero *)) {
+  background-color: var(--hw-glass);
+  border-color: var(--hw-line);
+  color: var(--hw-ink);
+}
+:where([data-season]) .btn-outline:hover:where(:not(.hw-light, .hw-light *, .hw-hero *)) {
+  background-color: var(--hw-glass-2);
+  border-color: rgba(255, 106, 0, 0.5);
+}
+:where([data-season]) :is(input, select, textarea):where(:not(.hw-light *))::placeholder {
+  color: var(--hw-soft);
+}
+:where([data-season]) .shadow-card:where(:not(.hw-light, .hw-light *)) {
+  box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.7);
+}
+
+:where([data-season]) .text-red-600:where(:not(.hw-light, .hw-light *)) {
+  color: #ff7a6e;
+}
+

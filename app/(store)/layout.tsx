@@ -4,6 +4,7 @@ import CartDrawer from "@/components/CartDrawer";
 import PromoBar from "@/components/promo/PromoBar";
 import CountdownRibbon from "@/components/promo/CountdownRibbon";
 import HalloweenAtmosphere from "@/components/promo/HalloweenAtmosphere";
+import NavidadAtmosphere from "@/components/promo/NavidadAtmosphere";
 import { getCategories } from "@/lib/data";
 import { getSeason } from "@/lib/season";
 
@@ -28,18 +29,25 @@ export default async function StoreLayout({
   const season = getSeason();
 
   return (
-    // data-season activa el estilo de temporada (app/halloween.css). "isolate"
-    // crea el contexto donde la atmósfera queda detrás de todo el contenido.
+    // data-season activa el estilo de temporada (app/season-night.css +
+    // halloween.css / navidad.css) y data-campaign el de Black Friday.
+    // "isolate" crea el contexto donde la atmósfera queda detrás del contenido.
     <div
       className="relative isolate flex min-h-screen flex-col"
-      data-season={season.halloween ? "halloween" : undefined}
+      data-season={season.theme ?? undefined}
+      data-campaign={season.campaign?.id}
     >
-      {season.halloween && <HalloweenAtmosphere />}
-      <PromoBar halloween={season.halloween} />
+      {season.theme === "halloween" && <HalloweenAtmosphere />}
+      {season.theme === "navidad" && <NavidadAtmosphere />}
+      <PromoBar
+        seasonMessages={season.messages}
+        theme={season.theme}
+        campaignId={season.campaign?.id ?? null}
+      />
       <Navbar categories={categories} />
-      {season.promoEndsAt && <CountdownRibbon endsAt={season.promoEndsAt} />}
+      {season.campaign && <CountdownRibbon campaign={season.campaign} />}
       <main className="flex-1">{children}</main>
-      <Footer categories={categories} halloween={season.halloween} />
+      <Footer categories={categories} theme={season.theme} />
       <CartDrawer />
     </div>
   );

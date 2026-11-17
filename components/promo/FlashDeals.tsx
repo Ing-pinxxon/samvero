@@ -4,7 +4,7 @@ import ProductImage from "../ProductImage";
 import Countdown from "./Countdown";
 import { formatCop } from "@/lib/format";
 import { primaryImage, type ProductWithRelations } from "@/lib/data";
-import { LOW_STOCK_THRESHOLD } from "@/lib/season";
+import { LOW_STOCK_THRESHOLD, type Campaign } from "@/lib/season";
 
 // La barra de disponibilidad se dibuja sobre esta escala: con 20 o menos
 // unidades muestra cuánto queda; por encima basta con "En stock".
@@ -18,12 +18,21 @@ type Deal = { product: ProductWithRelations; discount: number };
  */
 export default function FlashDeals({
   deals,
-  promoEndsAt,
+  campaign,
 }: {
   deals: Deal[];
-  promoEndsAt: string | null;
+  campaign: Campaign | null;
 }) {
   if (deals.length === 0) return null;
+  const promoEndsAt = campaign?.endsAt ?? null;
+  const title =
+    campaign?.id === "blackfriday"
+      ? "Ofertas Black Friday"
+      : campaign?.id === "navidad"
+        ? "Ofertas relámpago navideñas"
+        : promoEndsAt
+          ? "Ofertas relámpago"
+          : "Ofertas del momento";
 
   return (
     <section className="container-page pt-12">
@@ -34,7 +43,7 @@ export default function FlashDeals({
               <Zap className="h-5 w-5 fill-current" />
             </span>
             <h2 className="text-2xl font-bold text-navy sm:text-3xl">
-              {promoEndsAt ? "Ofertas relámpago" : "Ofertas del momento"}
+              {title}
             </h2>
             {promoEndsAt && (
               <span className="flex items-center gap-2 text-sm font-semibold text-navy/70">

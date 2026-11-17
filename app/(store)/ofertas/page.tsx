@@ -29,18 +29,18 @@ export default async function OfertasPage() {
           </span>
           <div>
             <h1 className="text-3xl font-bold text-navy">
-              {season.halloween ? "Ofertas de Halloween 🎃" : "Ofertas"}
+              {season.campaign ? `Ofertas de ${season.campaign.name} ${season.campaign.emoji}` : "Ofertas"}
             </h1>
             <p className="text-slatebrand">
-              {season.halloween
-                ? "Precios de miedo hasta el 31 de octubre."
+              {season.campaign
+                ? `Precios especiales hasta el ${season.campaign.endsLabel}.`
                 : "Descuentos especiales por tiempo limitado."}
             </p>
           </div>
         </div>
-        {season.promoEndsAt && (
+        {season.campaign && (
           <div className="flex items-center gap-2 text-sm font-semibold text-navy/70">
-            Terminan en <Countdown endsAt={season.promoEndsAt} variant="dark" />
+            Terminan en <Countdown endsAt={season.campaign.endsAt} variant="dark" />
           </div>
         )}
       </div>

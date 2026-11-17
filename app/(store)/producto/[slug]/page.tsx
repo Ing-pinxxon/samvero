@@ -149,9 +149,9 @@ export default async function ProductoPage({
               compareAtPriceCop={product.compareAtPriceCop}
               size="lg"
             />
-            {season.halloween && season.promoEndsAt && onSale && (
+            {season.campaign && onSale && (
               <p className="hw-flicker mt-2 text-sm font-bold text-red-600">
-                🎃 Precio de Halloween hasta el 31 de octubre
+                {season.campaign.emoji} Precio de {season.campaign.name} hasta el {season.campaign.endsLabel}
               </p>
             )}
           </div>

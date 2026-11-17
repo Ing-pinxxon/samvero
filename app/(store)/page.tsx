@@ -9,6 +9,10 @@ import HalloweenHero from "@/components/promo/HalloweenHero";
 import { Moon, Witch } from "@/components/promo/HalloweenDecor";
 import FlashDeals from "@/components/promo/FlashDeals";
 import CategoryDeals from "@/components/promo/CategoryDeals";
+import NavidadHero from "@/components/promo/NavidadHero";
+import BlackFridayBanner from "@/components/promo/BlackFridayBanner";
+import DecemberCalendar from "@/components/promo/DecemberCalendar";
+import { BethlehemStar, LightGarland } from "@/components/promo/NavidadDecor";
 import type { Metadata } from "next";
 import { getCategories, getDiscountedProducts, getFeaturedProducts } from "@/lib/data";
 import { getSeason } from "@/lib/season";
@@ -27,23 +31,27 @@ export default async function HomePage() {
     getDiscountedProducts().catch(() => []),
   ]);
 
+  // La oferta destacada del banner: el mayor descuento real, o un destacado.
+  const spotlight = deals[0] ?? (featured[0] ? { product: featured[0], discount: null } : null);
+
   return (
     <>
-      {season.halloween ? (
-        <HalloweenHero
-          promoEndsAt={season.promoEndsAt}
-          spotlight={
-            deals[0] ?? (featured[0] ? { product: featured[0], discount: null } : null)
-          }
-        />
+      {season.theme === "halloween" ? (
+        <HalloweenHero promoEndsAt={season.campaign?.endsAt ?? null} spotlight={spotlight} />
+      ) : season.theme === "navidad" ? (
+        <NavidadHero season={season} spotlight={spotlight} />
       ) : (
         <Hero />
+      )}
+      {season.campaign?.id === "blackfriday" && (
+        <BlackFridayBanner campaign={season.campaign} maxDiscount={deals[0]?.discount ?? null} />
       )}
       <TrustBadges />
 
       {/* Avisos de ofertas (estilo Temu): solo aparecen si hay descuentos reales */}
-      <FlashDeals deals={deals.slice(0, 12)} promoEndsAt={season.promoEndsAt} />
-      <CategoryDeals deals={deals} halloween={season.halloween} />
+      <FlashDeals deals={deals.slice(0, 12)} campaign={season.campaign} />
+      <CategoryDeals deals={deals} theme={season.theme} />
+      {season.theme === "navidad" && <DecemberCalendar season={season} />}
 
       {/* Categorías */}
       <section className="container-page py-16">
@@ -89,12 +97,18 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <SloganStrip halloween={season.halloween} />
+      <SloganStrip theme={season.theme} />
 
       {/* CTA */}
       <section className="container-page py-16">
         <div className="hw-cta relative overflow-hidden rounded-3xl bg-navy px-8 py-14 text-center text-white">
-          {season.halloween && (
+          {season.theme === "navidad" && (
+            <>
+              <LightGarland count={16} className="absolute inset-x-0 top-0" />
+              <BethlehemStar className="absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 opacity-40" />
+            </>
+          )}
+          {season.theme === "halloween" && (
             <>
               <Moon className="left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 opacity-30" />
               <Witch className="hw-witch-fly absolute left-0 top-6 w-28" />

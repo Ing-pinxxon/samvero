@@ -4,7 +4,10 @@
    Todo cuelga de [data-season="halloween"], que el layout de la tienda solo
    pone del 1 al 31 de octubre: fuera de temporada este archivo no hace nada.
 
-   Cómo se pinta la tienda de noche sin tocar cada componente:
+   El modo noche común (fondos, textos, bordes, islas claras) está en
+   app/season-night.css. Aquí va solo lo propio de Halloween.
+
+   Notas de la versión original:
    - Las reglas sobre utilidades de Tailwind (.bg-white, .text-navy, ...) van
      dentro de :where(), así quedan con la especificidad de UNA clase y ganan
      solo por orden (este archivo carga después de globals.css). Los estados
@@ -14,74 +17,6 @@
      fotos de producto lucen mejor sobre blanco.
    - Toda animación está dentro de prefers-reduced-motion: no-preference.
    ========================================================================== */
-
-[data-season="halloween"] {
-  --hw-bg: #070b16;
-  --hw-ink: #f4eeff;
-  --hw-soft: #bdb6d9;
-  --hw-glass: rgba(255, 255, 255, 0.045);
-  --hw-glass-2: rgba(255, 255, 255, 0.09);
-  --hw-line: rgba(255, 255, 255, 0.1);
-  --hw-pumpkin: #ff6a00;
-  --hw-ember: #ffb347;
-  --hw-witch: #7b4fd6;
-
-  background: var(--hw-bg);
-  color: var(--hw-ink);
-  color-scheme: dark;
-}
-html:has([data-season="halloween"]) body {
-  background: #070b16;
-}
-[data-season="halloween"] .hw-light {
-  color-scheme: light;
-}
-
-/* ---------- Superficies y textos (fuera de las islas claras) ---------- */
-
-:where([data-season="halloween"]) :is(.bg-white, .bg-light):where(:not(.hw-light, .hw-light *)) {
-  background-color: var(--hw-glass);
-}
-:where([data-season="halloween"]) [class~="bg-white/95"]:where(:not(.hw-light, .hw-light *)) {
-  background-color: rgba(10, 12, 28, 0.92);
-}
-:where([data-season="halloween"]) :is(.text-navy, [class~="text-navy/70"], [class~="text-navy/90"]):where(:not(.hw-light, .hw-light *)) {
-  color: var(--hw-ink);
-}
-:where([data-season="halloween"]) .text-slatebrand:where(:not(.hw-light, .hw-light *)) {
-  color: var(--hw-soft);
-}
-:where([data-season="halloween"]) :is([class~="border-navy/5"], [class~="border-navy/10"], [class~="border-navy/15"]):where(:not(.hw-light, .hw-light *)) {
-  border-color: var(--hw-line);
-}
-:where([data-season="halloween"]) [class~="divide-navy/5"]:where(:not(.hw-light *)) > * {
-  border-color: var(--hw-line);
-}
-:where([data-season="halloween"]) [class~="hover:bg-light"]:hover:where(:not(.hw-light, .hw-light *)) {
-  background-color: var(--hw-glass-2);
-}
-:where([data-season="halloween"]) [class~="focus:bg-white"]:focus:where(:not(.hw-light, .hw-light *)) {
-  background-color: var(--hw-glass-2);
-}
-:where([data-season="halloween"]) :is(.btn-outline, .chip):where(:not(.hw-light, .hw-light *, .hw-hero *)) {
-  background-color: var(--hw-glass);
-  border-color: var(--hw-line);
-  color: var(--hw-ink);
-}
-:where([data-season="halloween"]) .btn-outline:hover:where(:not(.hw-light, .hw-light *, .hw-hero *)) {
-  background-color: var(--hw-glass-2);
-  border-color: rgba(255, 106, 0, 0.5);
-}
-:where([data-season="halloween"]) :is(input, select, textarea):where(:not(.hw-light *))::placeholder {
-  color: var(--hw-soft);
-}
-:where([data-season="halloween"]) .shadow-card:where(:not(.hw-light, .hw-light *)) {
-  box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.7);
-}
-
-:where([data-season="halloween"]) .text-red-600:where(:not(.hw-light, .hw-light *)) {
-  color: #ff7a6e;
-}
 
 /* ---------- Tipografía de terror ---------- */
 
@@ -93,6 +28,11 @@ html:has([data-season="halloween"]) body {
 }
 [data-season="halloween"] main h2 {
   font-size: clamp(2rem, 4.2vw, 2.75rem);
+}
+[data-season="halloween"] {
+  --hw-pumpkin: #ff6a00;
+  --hw-ember: #ffb347;
+  --hw-witch: #7b4fd6;
 }
 [data-season="halloween"] .hw-light :is(h1, h2, h3) {
   font-family: inherit;

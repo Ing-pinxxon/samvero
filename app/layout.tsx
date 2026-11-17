@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Creepster, Poppins } from "next/font/google";
+import { Creepster, Mountains_of_Christmas, Poppins } from "next/font/google";
 import "./globals.css";
 import "./sello.css";
+import "./season-night.css";
 import "./halloween.css";
+import "./navidad.css";
 import JsonLd from "@/components/seo/JsonLd";
 import { siteConfig, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 
@@ -19,6 +21,15 @@ const creepster = Creepster({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-spooky",
+  display: "swap",
+  preload: false,
+});
+
+// Tipografía de títulos en temporada de Navidad (misma lógica: sin precarga).
+const xmas = Mountains_of_Christmas({
+  subsets: ["latin"],
+  weight: "700",
+  variable: "--font-xmas",
   display: "swap",
   preload: false,
 });
@@ -92,7 +103,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className={`${poppins.variable} ${creepster.variable}`}>
+    <html lang="es" className={`${poppins.variable} ${creepster.variable} ${xmas.variable}`}>
       <body className="font-sans">
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
         {children}

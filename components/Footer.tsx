@@ -3,6 +3,7 @@ import { Instagram, Facebook, Youtube, MapPin, Mail } from "lucide-react";
 import SamveroLogo from "./SamveroLogo";
 import SelloPinzon from "./SelloPinzon";
 import { Bat, Cobweb, HauntedSkyline } from "./promo/HalloweenDecor";
+import { LightGarland, PuebloSkyline } from "./promo/NavidadDecor";
 
 type FooterCategory = { name: string; slug: string };
 
@@ -23,14 +24,21 @@ const socials = [
 
 export default function Footer({
   categories,
-  halloween = false,
+  theme = null,
 }: {
   categories: FooterCategory[];
-  halloween?: boolean;
+  theme?: "halloween" | "navidad" | null;
 }) {
   return (
-    <footer className={`relative bg-navy text-white ${halloween ? "mt-32 sm:mt-40" : "mt-20"}`}>
-      {halloween && (
+    <footer className={`relative bg-navy text-white ${theme ? "mt-32 sm:mt-40" : "mt-20"}`}>
+      {theme === "navidad" && (
+        <>
+          {/* Pueblo con alumbrado asomando sobre el pie de página */}
+          <PuebloSkyline fill="#0D1B2A" className="absolute inset-x-0 bottom-full h-28 -scale-x-100 sm:h-36" />
+          <LightGarland count={24} className="absolute inset-x-0 top-0" />
+        </>
+      )}
+      {theme === "halloween" && (
         <>
           {/* Cementerio asomando sobre el pie de página */}
           <HauntedSkyline fill="#0D1B2A" className="absolute inset-x-0 bottom-full h-24 -scale-x-100 sm:h-32" />
