@@ -14,7 +14,7 @@ export default function ProductGallery({ images, name }: Props) {
   const gallery = images.length > 0 ? images : [{ url: "", alt: name }];
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="product-gallery flex flex-col gap-4">
       <div className="relative aspect-square overflow-hidden rounded-2xl border border-navy/5 bg-light">
         <ProductImage
           src={gallery[active]?.url}

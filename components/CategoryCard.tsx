@@ -18,7 +18,7 @@ export default function CategoryCard({ category }: Props) {
   return (
     <Link
       href={`/categoria/${category.slug}`}
-      className="group relative flex h-56 flex-col justify-end overflow-hidden rounded-2xl shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-cardHover"
+      className="category-card group relative flex h-56 flex-col justify-end overflow-hidden rounded-2xl shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-cardHover"
     >
       <ProductImage
         src={category.imageUrl}

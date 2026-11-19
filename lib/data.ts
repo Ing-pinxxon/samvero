@@ -1,5 +1,6 @@
 import { prisma } from "./prisma";
 import type { Prisma } from "@prisma/client";
+import { discountPercent } from "./format";
 
 const productInclude = {
   images: { orderBy: { sortOrder: "asc" } },
@@ -34,6 +35,22 @@ export async function getFeaturedProducts(limit = 8) {
     orderBy: { createdAt: "desc" },
     take: limit,
   });
+}
+
+/**
+ * Productos con descuento real (precio anterior mayor que el actual) y con
+ * stock, ordenados de mayor a menor descuento. Alimenta las "Ofertas
+ * relámpago" y los carteles "Hasta -X%" por categoría.
+ */
+export async function getDiscountedProducts() {
+  const products = await prisma.product.findMany({
+    where: { active: true, stock: { gt: 0 }, compareAtPriceCop: { not: null } },
+    include: productInclude,
+  });
+  return products
+    .map((p) => ({ product: p, discount: discountPercent(p.priceCop, p.compareAtPriceCop) }))
+    .filter((d): d is { product: ProductWithRelations; discount: number } => d.discount !== null)
+    .sort((a, b) => b.discount - a.discount);
 }
 
 export type ProductSort = "recientes" | "precio-asc" | "precio-desc";

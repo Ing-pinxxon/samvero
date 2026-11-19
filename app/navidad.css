@@ -1,0 +1,564 @@
+/* ==========================================================================
+   Temporada de Navidad — estilo colombiano (alumbrados, velitas, novena)
+
+   Todo cuelga de [data-season="navidad"], que el layout solo pone del 15 de
+   noviembre al 6 de enero. El modo noche común está en season-night.css;
+   aquí va lo propio de Navidad y el modo Black Friday ([data-campaign]).
+   Toda animación está dentro de prefers-reduced-motion: no-preference.
+   ========================================================================== */
+
+[data-season="navidad"] {
+  --hw-bg: #071226;
+  --hw-ink: #fdf7ec;
+  --hw-soft: #b9c6dd;
+  --nv-gold: #ffd23f;
+  --nv-red: #d62839;
+  --nv-green: #1e8e4e;
+}
+
+/* ---------- Tipografía ---------- */
+
+[data-season="navidad"] :is(main h1:not(.product-title), main h2:not(.nv-bf-title), .nv-title) {
+  font-family: var(--font-xmas), var(--font-poppins), cursive;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-shadow: 0 0 24px rgba(255, 210, 63, 0.35);
+}
+[data-season="navidad"] main h2:not(.nv-bf-title) {
+  font-size: clamp(2.1rem, 4.4vw, 2.9rem);
+}
+[data-season="navidad"] .hw-light :is(h1, h2, h3) {
+  font-family: inherit;
+  text-shadow: none;
+}
+.nv-lights-text {
+  background: linear-gradient(90deg, #ff3b3b, #ffd23f, #2bd67b, #3ec1ff, #ff5fd0, #ff3b3b);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+  filter: drop-shadow(0 0 14px rgba(255, 210, 63, 0.55)) drop-shadow(0 0 40px rgba(255, 59, 59, 0.3));
+  padding-bottom: 0.08em;
+}
+
+/* Acentos en dorado sobre el fondo de noche */
+:where([data-season="navidad"]) .text-brand:where(:not(.hw-light, .hw-light *)) {
+  color: var(--nv-gold);
+}
+[data-season="navidad"] .btn-primary {
+  background-color: var(--nv-red);
+}
+[data-season="navidad"] .btn-primary:hover {
+  background-color: #b5172a;
+}
+
+/* ---------- Menú ---------- */
+
+[data-season="navidad"] .site-header {
+  background: rgba(6, 14, 34, 0.9);
+  border-bottom-color: rgba(255, 210, 63, 0.25);
+  box-shadow: 0 1px 0 rgba(255, 210, 63, 0.15), 0 12px 30px -18px rgba(214, 40, 57, 0.5);
+}
+/* Gorro navideño sobre el logo */
+[data-season="navidad"] .site-logo::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: -14px;
+  width: 34px;
+  height: 26px;
+  transform: rotate(-22deg);
+  background: no-repeat center / contain
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 68 52'%3E%3Cpath d='M10 38C14 18 30 4 52 8c-8 6-10 16-8 30z' fill='%23D62839'/%3E%3Cpath d='M52 8c6 4 8 10 6 16' fill='none' stroke='%23D62839' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='58' cy='27' r='7' fill='%23fff'/%3E%3Crect x='4' y='34' width='46' height='12' rx='6' fill='%23fff'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+}
+[data-season="navidad"] .site-logo svg rect {
+  stroke: rgba(255, 210, 63, 0.6);
+  stroke-width: 2;
+}
+
+/* ---------- Banner principal ---------- */
+
+.nv-sky {
+  background:
+    radial-gradient(55% 45% at 82% 12%, rgba(255, 210, 63, 0.18), transparent 70%),
+    radial-gradient(60% 40% at 50% 100%, rgba(255, 150, 60, 0.22), transparent 70%),
+    linear-gradient(180deg, #081a3d 0%, #0b2350 45%, #0a1838 80%, #071226 100%);
+}
+/* El alumbrado se desvanece detrás del texto del banner para no estorbar la lectura. */
+.nv-arcs {
+  -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.25) 40%, #000 62%);
+  mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.25) 40%, #000 62%);
+}
+@media (max-width: 1023px) {
+  .nv-arcs {
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.2) 35%);
+    mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.2) 35%);
+  }
+}
+[data-season="navidad"] .countdown-ribbon a {
+  background-color: var(--nv-red);
+}
+[data-season="navidad"] .countdown-ribbon a:hover {
+  background-color: #b5172a;
+}
+[data-campaign="blackfriday"] .countdown-ribbon a {
+  background-color: #ffd23f;
+}
+
+.nv-spotlight {
+  box-shadow:
+    0 0 0 3px var(--nv-gold, #ffd23f),
+    0 0 50px -6px rgba(255, 210, 63, 0.65),
+    0 30px 60px -20px rgba(0, 0, 0, 0.8);
+}
+.nv-badge-burst {
+  box-shadow: 0 0 0 4px #fff, 0 0 24px rgba(255, 210, 63, 0.8);
+  transform: rotate(10deg);
+}
+[data-season="navidad"] .hw-digit {
+  color: var(--nv-gold);
+  border-color: rgba(255, 210, 63, 0.5);
+  background-color: rgba(255, 210, 63, 0.1);
+  text-shadow: 0 0 12px rgba(255, 210, 63, 0.8);
+  box-shadow: inset 0 0 18px rgba(255, 210, 63, 0.15), 0 0 18px -4px rgba(255, 210, 63, 0.55);
+}
+
+/* Bombillos de la guirnalda */
+.hw-bulb {
+  position: relative;
+  display: block;
+  width: 14px;
+  height: 26px;
+  flex: none;
+}
+.hw-bulb::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+  background: #1b3a26;
+}
+.hw-bulb::after {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 7px;
+  width: 12px;
+  height: 17px;
+  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.85), var(--c) 45%);
+  box-shadow: 0 0 10px 3px var(--c), 0 0 22px 6px color-mix(in srgb, var(--c) 45%, transparent);
+}
+.hw-bulb:nth-child(odd) {
+  transform: rotate(-10deg);
+}
+.hw-bulb:nth-child(even) {
+  transform: rotate(10deg);
+}
+
+/* ---------- Fondo global ---------- */
+
+.nv-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(70% 45% at 85% 0%, rgba(255, 210, 63, 0.1), transparent 70%),
+    radial-gradient(50% 40% at 0% 100%, rgba(214, 40, 57, 0.12), transparent 70%),
+    linear-gradient(180deg, #0a1a3a 0%, #071226 60%);
+}
+.nv-falling-light {
+  position: absolute;
+  top: -4vh;
+  border-radius: 50%;
+  background: var(--c);
+  box-shadow: 0 0 10px 3px var(--c);
+  opacity: 0.5;
+}
+.nv-shooting-star {
+  position: absolute;
+  top: 12%;
+  left: 70%;
+  width: 140px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.95), transparent);
+  opacity: 0;
+  transform: rotate(-24deg);
+}
+
+/* ---------- Secciones de la página de inicio ---------- */
+
+[data-season="navidad"] .trust-badges {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 210, 63, 0.18);
+}
+[data-season="navidad"] .trust-badges [class~="bg-brand/10"] {
+  background: radial-gradient(circle, rgba(214, 40, 57, 0.45), rgba(214, 40, 57, 0.1));
+  box-shadow: 0 0 22px -2px rgba(214, 40, 57, 0.6);
+  color: #ffe9a3;
+}
+
+/* Ofertas relámpago: marco de bombillos que corren */
+[data-season="navidad"] .flash-deals {
+  isolation: isolate;
+  overflow: hidden;
+  background: transparent;
+  --tw-ring-color: transparent;
+}
+[data-season="navidad"] .flash-deals::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: repeating-linear-gradient(
+    90deg,
+    #ff3b3b 0 18px,
+    #ffd23f 18px 36px,
+    #2bd67b 36px 54px,
+    #3ec1ff 54px 72px
+  );
+}
+[data-season="navidad"] .flash-deals::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  z-index: -1;
+  border-radius: calc(1.5rem - 4px);
+  background:
+    radial-gradient(80% 60% at 10% 0%, rgba(214, 40, 57, 0.2), transparent 70%),
+    linear-gradient(180deg, #0d1f42, #081430);
+}
+[data-season="navidad"] .flash-deals h2 {
+  color: #fff;
+}
+[data-season="navidad"] .flash-deals [class~="bg-brand"]:not(.discount-badge) {
+  background-color: var(--nv-red);
+}
+
+/* Categorías envueltas como regalo */
+[data-season="navidad"] .category-card {
+  box-shadow:
+    inset 0 0 0 3px rgba(255, 210, 63, 0.35),
+    0 18px 34px -14px rgba(0, 0, 0, 0.85);
+}
+[data-season="navidad"] .category-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent calc(80% - 10px), #e63946 calc(80% - 10px), #e63946 calc(80% - 7px), #ffd23f calc(80% - 7px), #ffd23f calc(80% + 7px), #e63946 calc(80% + 7px), #e63946 calc(80% + 10px), transparent calc(80% + 10px)),
+    linear-gradient(180deg, transparent calc(28% - 10px), #e63946 calc(28% - 10px), #e63946 calc(28% - 7px), #ffd23f calc(28% - 7px), #ffd23f calc(28% + 7px), #e63946 calc(28% + 7px), #e63946 calc(28% + 10px), transparent calc(28% + 10px));
+  opacity: 0.92;
+}
+[data-season="navidad"] .category-card::after {
+  content: "";
+  position: absolute;
+  left: calc(80% - 34px);
+  top: calc(28% - 30px);
+  width: 68px;
+  height: 48px;
+  z-index: 2;
+  pointer-events: none;
+  background: no-repeat center / contain
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 56'%3E%3Cpath d='M40 26C26 2 2 6 8 22c4 12 22 8 32 4z' fill='%23FFD23F'/%3E%3Cpath d='M40 26C54 2 78 6 72 22c-4 12-22 8-32 4z' fill='%23FFD23F'/%3E%3Cpath d='M36 28 24 54l8-4 6 4 2-24zM44 28l12 26-8-4-6 4-2-24z' fill='%23F2B705'/%3E%3Cellipse cx='40' cy='26' rx='8' ry='7' fill='%23FFB703'/%3E%3C/svg%3E");
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.45));
+  transition: transform 0.3s ease;
+}
+[data-season="navidad"] .category-card:hover {
+  box-shadow:
+    inset 0 0 0 3px #ffd23f,
+    0 0 36px -6px rgba(255, 210, 63, 0.6),
+    0 18px 34px -14px rgba(0, 0, 0, 0.85);
+}
+[data-season="navidad"] .category-card:hover::after {
+  transform: scale(1.15) rotate(-6deg);
+}
+
+/* Tarjetas de producto: bastón de caramelo arriba y moño al pasar */
+[data-season="navidad"] .product-card {
+  box-shadow:
+    0 0 0 1px rgba(255, 210, 63, 0.25),
+    0 16px 34px -14px rgba(0, 0, 0, 0.85);
+}
+[data-season="navidad"] .product-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 6px;
+  z-index: 3;
+  background: repeating-linear-gradient(135deg, #e63946 0 8px, #fff 8px 16px);
+}
+[data-season="navidad"] .product-card::after {
+  content: "";
+  position: absolute;
+  right: 6px;
+  top: 8px;
+  width: 46px;
+  height: 32px;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.5) rotate(-20deg);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  background: no-repeat center / contain
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 56'%3E%3Cpath d='M40 26C26 2 2 6 8 22c4 12 22 8 32 4z' fill='%23E63946'/%3E%3Cpath d='M40 26C54 2 78 6 72 22c-4 12-22 8-32 4z' fill='%23E63946'/%3E%3Cpath d='M36 28 24 54l8-4 6 4 2-24zM44 28l12 26-8-4-6 4-2-24z' fill='%23C81D2E'/%3E%3Cellipse cx='40' cy='26' rx='8' ry='7' fill='%23FF5A67'/%3E%3C/svg%3E");
+}
+[data-season="navidad"] .product-card:hover {
+  box-shadow:
+    0 0 0 2px #ffd23f,
+    0 0 34px -4px rgba(255, 210, 63, 0.55),
+    0 20px 40px -14px rgba(0, 0, 0, 0.9);
+}
+[data-season="navidad"] .product-card:hover::after {
+  opacity: 1;
+  transform: scale(1) rotate(0);
+}
+[data-season="navidad"] .discount-badge::before {
+  content: "🎁 ";
+}
+
+/* Carteles por categoría con destello */
+[data-season="navidad"] .category-deals a::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40%;
+  left: -60%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transform: skewX(-18deg);
+  pointer-events: none;
+}
+
+/* Agenda decembrina */
+.nv-date {
+  background: rgba(255, 255, 255, 0.045);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.nv-date--now {
+  background: rgba(255, 210, 63, 0.1);
+  border-color: rgba(255, 210, 63, 0.7);
+  box-shadow: 0 0 30px -8px rgba(255, 210, 63, 0.6);
+}
+
+/* Franja de eslóganes con bombillos */
+[data-season="navidad"] .slogan-strip {
+  border-block: 6px solid transparent;
+  border-image: repeating-linear-gradient(90deg, #ff3b3b 0 22px, #ffd23f 22px 44px, #2bd67b 44px 66px, #3ec1ff 66px 88px) 6;
+}
+
+/* Llamado final */
+[data-season="navidad"] .hw-cta {
+  background: radial-gradient(70% 90% at 50% 45%, #13345f 0%, #0d1b2a 72%);
+  box-shadow: inset 0 0 0 1px rgba(255, 210, 63, 0.3), 0 0 60px -20px rgba(214, 40, 57, 0.6);
+  padding-top: 4.5rem;
+}
+
+/* Ficha de producto */
+[data-season="navidad"] .product-gallery > div:first-child {
+  box-shadow: 0 0 0 1px rgba(255, 210, 63, 0.4), 0 0 50px -14px rgba(255, 210, 63, 0.5);
+}
+
+/* Regalo interactivo */
+.hw-gift-lid {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+  transition: transform 0.45s cubic-bezier(0.34, 1.5, 0.64, 1);
+}
+.hw-gift-lid.is-open {
+  transform: translate(-6px, -22px) rotate(-28deg);
+}
+.nv-confetti {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  opacity: 0;
+}
+
+/* ---------- Black Friday ---------- */
+
+.nv-bf {
+  box-shadow: inset 0 0 0 2px rgba(255, 210, 63, 0.6), 0 0 60px -14px rgba(255, 210, 63, 0.45);
+}
+.nv-bf-title {
+  background: linear-gradient(180deg, #fff3c4 0%, #ffd23f 45%, #c99400 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 0.02em;
+  filter: drop-shadow(0 0 18px rgba(255, 210, 63, 0.35));
+}
+.nv-bf .hw-digit,
+[data-campaign="blackfriday"] .hw-digit {
+  color: #ffd23f;
+  border-color: rgba(255, 210, 63, 0.55);
+  background-color: rgba(255, 210, 63, 0.08);
+  text-shadow: 0 0 12px rgba(255, 210, 63, 0.8);
+}
+.nv-bf-shine {
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 210, 63, 0.18) 45%, transparent 60%);
+  background-size: 250% 100%;
+}
+[data-campaign="blackfriday"] .discount-badge {
+  background-color: #000;
+  color: #ffd23f;
+  box-shadow: 0 0 0 1px rgba(255, 210, 63, 0.6);
+}
+[data-campaign="blackfriday"] .discount-badge::before {
+  content: "⚡ ";
+}
+
+/* ==========================================================================
+   Animaciones
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  .nv-lights-text {
+    animation: nv-hue 6s linear infinite;
+  }
+  @keyframes nv-hue {
+    to { background-position: 200% 0; }
+  }
+
+  .hw-twinkle {
+    animation: nv-twinkle 1.8s ease-in-out infinite alternate;
+  }
+  @keyframes nv-twinkle {
+    from { opacity: 1; }
+    to { opacity: 0.25; }
+  }
+
+  .hw-bulb::after {
+    animation: nv-bulb 2.4s steps(1) infinite;
+    animation-delay: inherit;
+  }
+  @keyframes nv-bulb {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; box-shadow: none; }
+  }
+
+  .hw-star {
+    animation: nv-star-pulse 4s ease-in-out infinite;
+  }
+  @keyframes nv-star-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+  }
+  .hw-rays {
+    transform-box: view-box;
+    transform-origin: center;
+    animation: nv-rays 40s linear infinite;
+  }
+  @keyframes nv-rays {
+    to { transform: rotate(1turn); }
+  }
+
+  .hw-flame {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: nv-flame 0.9s ease-in-out infinite alternate;
+  }
+  @keyframes nv-flame {
+    0% { transform: scaleY(1) skewX(0); }
+    50% { transform: scaleY(1.18) skewX(4deg); }
+    100% { transform: scaleY(0.9) skewX(-4deg); }
+  }
+  .hw-flame-glow {
+    animation: nv-glow 1.6s ease-in-out infinite alternate;
+  }
+  @keyframes nv-glow {
+    from { opacity: 0.25; }
+    to { opacity: 0.6; }
+  }
+
+  .nv-falling-light {
+    animation-name: nv-fall;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+  @keyframes nv-fall {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(14px, 27vh); }
+    50% { transform: translate(-10px, 55vh); }
+    75% { transform: translate(12px, 82vh); }
+    100% { transform: translate(0, 110vh); }
+  }
+
+  .nv-shooting-star {
+    animation: nv-shoot 11s ease-in infinite;
+    animation-delay: 4s;
+  }
+  @keyframes nv-shoot {
+    0%, 88% { opacity: 0; transform: rotate(-24deg) translateX(0); }
+    90% { opacity: 1; }
+    100% { opacity: 0; transform: rotate(-24deg) translateX(-480px); }
+  }
+
+  [data-season="navidad"] .flash-deals::before {
+    animation: nv-chase 1.2s steps(4) infinite;
+  }
+  @keyframes nv-chase {
+    to { background-position: 72px 0; }
+  }
+
+  [data-season="navidad"] .category-deals a::after {
+    animation: nv-shine 4.5s ease-in-out infinite;
+  }
+  [data-season="navidad"] .category-deals li:nth-child(2) a::after { animation-delay: 1.1s; }
+  [data-season="navidad"] .category-deals li:nth-child(3) a::after { animation-delay: 2.2s; }
+  [data-season="navidad"] .category-deals li:nth-child(4) a::after { animation-delay: 3.3s; }
+  @keyframes nv-shine {
+    0%, 60% { left: -60%; }
+    100% { left: 130%; }
+  }
+
+  [data-season="navidad"] .hw-btn-glow {
+    animation-name: nv-pulse;
+  }
+  @keyframes nv-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(214, 40, 57, 0.7), 0 10px 30px -8px rgba(214, 40, 57, 0.8); }
+    70% { box-shadow: 0 0 0 16px rgba(214, 40, 57, 0), 0 10px 30px -8px rgba(214, 40, 57, 0.8); }
+    100% { box-shadow: 0 0 0 0 rgba(214, 40, 57, 0), 0 10px 30px -8px rgba(214, 40, 57, 0.8); }
+  }
+
+  .nv-gift-btn {
+    transition: transform 0.2s ease;
+  }
+  .nv-gift-btn:hover {
+    transform: scale(1.06) rotate(4deg);
+  }
+  .nv-confetti {
+    animation: nv-confetti 1.3s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+  }
+  @keyframes nv-confetti {
+    0% { opacity: 1; transform: rotate(var(--a)) translateX(0) rotate(0); }
+    100% { opacity: 0; transform: rotate(var(--a)) translateX(var(--d)) rotate(540deg); }
+  }
+
+  .nv-bf-shine {
+    animation: nv-bf-shine 3.5s ease-in-out infinite;
+  }
+  @keyframes nv-bf-shine {
+    from { background-position: 150% 0; }
+    to { background-position: -100% 0; }
+  }
+
+  [data-season="navidad"] .promo-bar,
+  [data-campaign="blackfriday"] .promo-bar {
+    background-size: 200% 100%;
+  }
+}

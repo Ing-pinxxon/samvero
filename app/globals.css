@@ -47,3 +47,18 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ---------- Temporada de Halloween (data-season en el layout de la tienda) ---------- */
+[data-season="halloween"] .discount-badge::before {
+  content: "🎃 ";
+}
+[data-season="halloween"] .product-card {
+  border-top: 3px solid theme("colors.brand.DEFAULT");
+}
+
+/* La barra fija de compra (móvil) no debe tapar el final del pie de página. */
+@media (max-width: 1023px) {
+  body:has(.sticky-buy-bar) footer {
+    padding-bottom: 5rem;
+  }
+}

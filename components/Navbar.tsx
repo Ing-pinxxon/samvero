@@ -29,10 +29,10 @@ export default function Navbar({ categories }: { categories: NavCategory[] }) {
   useEffect(() => setMobileOpen(false), [pathname]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-navy/5 bg-white/95 backdrop-blur">
+    <header className="site-header sticky top-0 z-40 border-b border-navy/5 bg-white/95 backdrop-blur">
       <div className="container-page">
         <div className="flex h-16 items-center gap-4">
-          <Link href="/" aria-label="SAMVERO inicio">
+          <Link href="/" aria-label="SAMVERO inicio" className="site-logo relative">
             <SamveroLogo />
           </Link>
 
